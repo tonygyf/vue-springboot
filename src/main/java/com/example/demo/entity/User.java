@@ -1,7 +1,10 @@
 package com.example.demo.entity;
 
 import javax.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -9,7 +12,8 @@ public class User implements Serializable {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "user_id")
+    private Integer userId;
     
     @Column(unique = true, nullable = false)
     private String username;
@@ -17,25 +21,39 @@ public class User implements Serializable {
     @Column(nullable = false)
     private String password;
     
-    @Column(nullable = true)
+    @Column(nullable = false)
     private String email;
     
+    @Column(nullable = false)
+    private String role = "client";
+    
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt;
+    
     // 构造函数
-    public User() {}
+    public User() {
+        this.role = "client";
+    }
     
     public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
         this.email = email;
+        this.role = "client";
     }
     
     // Getter和Setter
-    public Long getId() {
-        return id;
+    public Integer getUserId() {
+        return userId;
     }
     
-    public void setId(Long id) {
-        this.id = id;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
     
     public String getUsername() {
@@ -60,5 +78,21 @@ public class User implements Serializable {
     
     public void setEmail(String email) {
         this.email = email;
+    }
+    
+    public String getRole() {
+        return role;
+    }
+    
+    public void setRole(String role) {
+        this.role = role;
+    }
+    
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 }
