@@ -2,21 +2,18 @@
   <div class="sidebar-right">
     <div class="user-info-card">
       <div class="user-avatar">
-        <img src="https://via.placeholder.com/100" alt="用户头像">
+        <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像">
       </div>
-      <h4 class="user-name">{{ userName }}</h4>
+      <h4 class="user-name">{{ user.username }}</h4>
       <div class="user-stats">
+<!--        <div class="stat-item">-->
+<!--          <span class="stat-label">博客</span>-->
+<!--          <span class="stat-value">{{ user.blogCount }}</span>-->
+<!--        </div>-->
+
         <div class="stat-item">
-          <span class="stat-label">博客</span>
-          <span class="stat-value">{{ blogCount }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">关注</span>
-          <span class="stat-value">{{ followingCount }}</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-label">粉丝</span>
-          <span class="stat-value">{{ followerCount }}</span>
+          <span class="stat-label">权限</span>
+          <span class="stat-value">{{ user.role }}</span>
         </div>
       </div>
     </div>
@@ -25,14 +22,26 @@
 
 <script>
 export default {
-  props: {
-    userName: String,
-    blogCount: Number,
-    followingCount: Number,
-    followerCount: Number
+  data() {
+    return {
+      user: {
+        username: '',
+        blogCount: 0,
+        followingCount: 0,
+        followerCount: 0,
+        avatarUrl: '/avatars/admin.png'
+      }
+    };
+  },
+  created() {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.user = JSON.parse(savedUser);
+    }
   }
 }
 </script>
+
 
 <style scoped>
 .sidebar-right {

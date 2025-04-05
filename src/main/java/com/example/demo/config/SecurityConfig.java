@@ -15,6 +15,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             .antMatchers("/api/auth/**", "/api/blogs/**").permitAll()
             // 这意味着所有以"/api/blogs/"开头的路径都将被允许访问，包括"/api/blogs/"本身。
+                .antMatchers(
+                        "/",               // 首页
+                        "/avatars/**",     // 用户头像
+                        "/css/**",         // 样式
+                        "/js/**",          // JS 脚本
+                        "/images/**",      // 图片
+                        "/favicon.ico"     // 图标
+                ).permitAll()
             .anyRequest().authenticated();
         
         http.cors();

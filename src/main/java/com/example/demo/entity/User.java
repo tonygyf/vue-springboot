@@ -26,6 +26,8 @@ public class User implements Serializable {
     
     @Column(nullable = false)
     private String role = "client";
+
+
     
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -34,7 +36,10 @@ public class User implements Serializable {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
-    
+
+    @Column(name = "avatar_url")
+    private String avatarUrl = "/avatars/admin.png";
+
     // 构造函数
     public User() {
         this.role = "client";
@@ -86,6 +91,14 @@ public class User implements Serializable {
     
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
     
     public LocalDateTime getCreatedAt() {
