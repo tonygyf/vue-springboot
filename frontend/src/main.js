@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import App from './App.vue'
+import store from './store'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Home from './components/Home.vue'
@@ -24,5 +25,6 @@ const router = createRouter({
 
 const app = createApp(App)
 app.use(router)
+app.use(store)
 app.use(ElementPlus)
 app.mount('#app')
