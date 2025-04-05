@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class Blog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="blog_id")
     private Integer blogId;
 
     @ManyToOne

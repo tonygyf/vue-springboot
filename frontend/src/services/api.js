@@ -23,4 +23,11 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+class BlogService {
+  getBlogList() {
+    return axios.get(API_URL + 'blogs');
+  }
+}
+
+export const authService = new AuthService();
+export const blogService = new BlogService();

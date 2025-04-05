@@ -50,7 +50,7 @@ export default {
         this.messageClass = 'alert-success';
         localStorage.setItem('user', JSON.stringify(response.data.user));
         setTimeout(() => {
-          this.$router.push('/home');
+          this.$router.push('/blogs');
         }, 1000);
       } catch (error) {
         this.message = error.response?.data?.message || '登录失败，请检查网络连接';
