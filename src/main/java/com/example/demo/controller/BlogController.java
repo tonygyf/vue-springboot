@@ -24,6 +24,19 @@ public class BlogController {
         return ResponseEntity.ok(blogs);
     }
 
+    @PostMapping("/blogs/{blogId}/comments")
+    public ResponseEntity<?> createComment(@PathVariable Integer blogId, @RequestBody Map<String, String> payload) {
+        try {
+            // 这里暂时硬编码userId为1，实际应该从认证信息中获取
+            Integer userId = 1;
+            String content = payload.get("content");
+            Comment comment = blogService.createComment(blogId, userId, content);
+            return ResponseEntity.ok(comment);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/blogs/{id}")
     public ResponseEntity<?> getBlogDetails(@PathVariable Integer id) {
         Blog blog = blogService.getBlogById(id);

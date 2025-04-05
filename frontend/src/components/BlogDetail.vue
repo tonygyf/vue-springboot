@@ -20,6 +20,10 @@
       </div>
       <div class="comments-section">
         <h4>评论 ({{ comments.length }})</h4>
+        <div class="comment-form mb-4">
+          <textarea v-model="newComment" class="form-control mb-2" rows="3" placeholder="写下你的评论..."></textarea>
+          <button @click="submitComment" class="btn btn-primary" :disabled="!newComment.trim()">发表评论</button>
+        </div>
         <div v-for="comment in comments" :key="comment.commentId" class="comment-item p-3 border-bottom">
           <p>{{ comment.content }}</p>
           <small class="text-muted">{{ formatDate(comment.createdAt) }}</small>
@@ -40,7 +44,8 @@ export default {
       comments: [],
       likesCount: 0,
       message: '',
-      messageClass: ''
+      messageClass: '',
+      newComment: ''
     };
   },
   created() {
@@ -65,6 +70,19 @@ export default {
       if (!dateString) return '';
       const date = new Date(dateString);
       return date.toLocaleDateString();
+    },
+    async submitComment() {
+      try {
+        const blogId = this.$route.params.id;
+        await blogService.createComment(blogId, this.newComment);
+        this.newComment = '';
+        await this.fetchBlogDetails();
+        this.message = '评论发表成功';
+        this.messageClass = 'alert-success';
+      } catch (error) {
+        this.message = error.response?.data?.message || '评论发表失败';
+        this.messageClass = 'alert-danger';
+      }
     }
   }
 };

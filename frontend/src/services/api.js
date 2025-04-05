@@ -31,6 +31,10 @@ class BlogService {
   getBlogDetails(blogId) {
     return axios.get(API_URL + `blogs/${blogId}`);
   }
+
+  createComment(blogId, content) {
+    return axios.post(API_URL + `blogs/${blogId}/comments`, { content });
+  }
 }
 
 export const authService = new AuthService();
