@@ -7,7 +7,7 @@
       <div v-if="message" class="alert" :class="messageClass" role="alert">
         {{ message }}
       </div>
-      <div v-for="blog in blogs" :key="blog.blogId" class="mb-3 p-3 border">
+      <div v-for="blog in blogs" :key="blog.blogId" class="mb-3 p-3 border blog-item" @click="viewBlogDetail(blog.blogId)">
         <h4>{{ blog.title }}</h4>
         <p>{{ blog.content }}</p>
         <small>{{ formatDate(blog.createdAt) }}</small>
@@ -47,6 +47,9 @@ export default {
       if (!dateString) return '';
       const date = new Date(dateString);
       return date.toLocaleDateString();
+    },
+    viewBlogDetail(blogId) {
+      this.$router.push(`/blogs/${blogId}`);
     }
   }
 };

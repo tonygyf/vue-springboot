@@ -13,7 +13,8 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/register', component: Register },
     { path: '/home', component: Home },
-    {path: '/blogs', component: BlogList}
+    { path: '/blogs', component: BlogList },
+    { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') }
 ]
 
 const router = createRouter({

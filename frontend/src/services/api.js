@@ -27,6 +27,10 @@ class BlogService {
   getBlogList() {
     return axios.get(API_URL + 'blogs');
   }
+
+  getBlogDetails(blogId) {
+    return axios.get(API_URL + `blogs/${blogId}`);
+  }
 }
 
 export const authService = new AuthService();
