@@ -3,11 +3,11 @@
     <button class="action-btn" @click="$emit('create-new')">
       <i class="fas fa-plus"></i> 写博客
     </button>
-    <button class="action-btn" @click="$emit('view-drafts')">
-      <i class="fas fa-file"></i> 草稿箱
-    </button>
     <button class="action-btn" @click="$emit('view-my-blogs')">
       <i class="fas fa-book"></i> 我的博客
+    </button>
+    <button class="action-btn" @click="$emit('view-blog-list')">
+      <i class="fas fa-list"></i> 博客列表
     </button>
   </div>
 </template>

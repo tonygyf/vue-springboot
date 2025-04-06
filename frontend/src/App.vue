@@ -8,6 +8,7 @@
         @create-new="goToNew"
         @view-drafts="goToDrafts"
         @view-my-blogs="goToMyBlogs"
+        @view-blog-list="goToBlogList"
     />
     <SidebarRight
         v-if="!isLoginPage"
@@ -57,6 +58,9 @@ export default {
     },
     goToMyBlogs() {
       this.$router.push('/myblogs');
+    },
+    goToBlogList() {
+      this.$router.push('/blogs');
     }
   }
 }

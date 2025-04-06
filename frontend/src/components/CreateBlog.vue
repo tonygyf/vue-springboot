@@ -30,6 +30,7 @@
 </template>
 
 <script>
+// 注意这个publish非常重要
 import { blogService } from '../services/api';
 
 export default {
