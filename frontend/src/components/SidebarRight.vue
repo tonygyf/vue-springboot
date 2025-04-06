@@ -2,14 +2,14 @@
   <div class="user-info-wrapper">
     <div class="user-info-trigger">
       <div class="user-avatar-small">
-        <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像">
+        <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像" />
       </div>
       <span class="username-small">{{ user.username }}</span>
     </div>
     <div class="user-info-expanded">
       <div class="user-info-card">
         <div class="user-avatar">
-          <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像">
+          <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像" />
         </div>
         <h4 class="user-name">{{ user.username }}</h4>
         <div class="user-stats">
@@ -18,6 +18,13 @@
             <span class="stat-value">{{ user.role }}</span>
           </div>
         </div>
+
+        <div class="edit-section">
+          <button class="edit-btn" @click="openEditDialog">
+            <i class="fas fa-edit"></i> 编辑信息
+          </button>
+        </div>
+
         <div class="logout-section">
           <button class="logout-btn" @click="logout">
             <i class="fas fa-sign-out-alt"></i> 退出登录
@@ -25,20 +32,54 @@
         </div>
       </div>
     </div>
+
+    <!-- 编辑浮窗 -->
+    <FloatEditor :visible="editDialogVisible" @close="closeEditDialog">
+      <div class="editor-content">
+        <h3>编辑我的信息</h3>
+
+        <label>用户名</label>
+        <input v-model="editingUser.username" disabled />
+
+        <label>密码</label>
+        <input type="text" v-model="editingUser.password" />
+
+        <label>邮箱</label>
+        <input v-model="editingUser.email" type="email" />
+
+        <label>头像地址</label>
+        <input v-model="editingUser.avatarUrl" />
+        <img :src="'http://localhost:8080' + editingUser.avatarUrl"
+             alt="头像预览"
+             class="avatar-preview"
+             v-if="editingUser.avatarUrl" />
+
+        <div class="editor-actions">
+          <button @click="closeEditDialog">取消</button>
+          <button class="save-btn" @click="submitEdit">保存</button>
+        </div>
+      </div>
+    </FloatEditor>
   </div>
 </template>
 
 <script>
+import FloatEditor from './FloatEditor.vue';
+import axios from 'axios';
+
 export default {
+  components: { FloatEditor },
   data() {
     return {
       user: {
         username: '',
-        blogCount: 0,
-        followingCount: 0,
-        followerCount: 0,
-        avatarUrl: '/avatars/admin.png'
-      }
+        email: '',
+        password: '',
+        avatarUrl: '/avatars/admin.png',
+        role: 'user'
+      },
+      editDialogVisible: false,
+      editingUser: {}
     };
   },
   created() {
@@ -51,9 +92,42 @@ export default {
     logout() {
       localStorage.removeItem('user');
       this.$router.push('/login');
+    },
+    openEditDialog() {
+      this.editingUser = { ...this.user };
+      this.editDialogVisible = true;
+    },
+    closeEditDialog() {
+      this.editDialogVisible = false;
+    },
+    async submitEdit() {
+      try {
+        const payload = {
+          username: this.editingUser.username,
+          password: this.editingUser.password,
+          email: this.editingUser.email,
+          avatarUrl: this.editingUser.avatarUrl
+        };
+
+        await axios.put(`/api/users/${this.editingUser.username}`, payload);
+
+        // 更新并保存用户信息
+        this.user = { ...this.user, ...payload };
+        localStorage.setItem('user', JSON.stringify(this.user));
+
+        // ✅ 再从 localStorage 同步一次，确保数据一致
+        const saved = localStorage.getItem('user');
+        if (saved) {
+          this.user = JSON.parse(saved);
+        }
+
+        this.editDialogVisible = false;
+      } catch (error) {
+        alert(error.response?.data?.message || '更新失败');
+      }
     }
   }
-}
+};
 </script>
 
 <style scoped>
@@ -149,6 +223,29 @@ export default {
   font-weight: bold;
 }
 
+.edit-section {
+  margin-top: 10px;
+}
+
+.edit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #409eff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.edit-btn:hover {
+  background-color: #66b1ff;
+}
+
 .logout-section {
   margin-top: 15px;
   padding-top: 15px;
@@ -173,5 +270,53 @@ export default {
 
 .logout-btn:hover {
   background-color: #f78989;
+}
+
+.editor-content {
+  max-width: 500px;
+  width: 100%;
+}
+
+.editor-content label {
+  display: block;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.editor-content input {
+  width: 100%;
+  margin-top: 5px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.editor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.save-btn {
+  background-color: #409eff;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #66b1ff;
+}
+
+.avatar-preview {
+  margin-top: 10px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
 }
 </style>

@@ -66,4 +66,25 @@ public class BlogService {
         
         return blogRepository.save(blog);
     }
+    public Blog updateBlog(Integer blogId, String title, String content) {
+        Blog blog = getBlogById(blogId);
+        if (blog == null || blog.isDeleted()) return null;
+
+        blog.setTitle(title);
+        blog.setContent(content);
+        blog.setUpdatedAt(java.time.LocalDateTime.now());
+        return blogRepository.save(blog);
+    }
+
+    public boolean deleteBlog(Integer blogId) {
+        Blog blog = getBlogById(blogId);
+        if (blog == null || blog.isDeleted()) return false;
+
+        blog.setDeleted(true); // 逻辑删除
+        blog.setUpdatedAt(java.time.LocalDateTime.now());
+        blogRepository.save(blog);
+        return true;
+    }
+
+
 }

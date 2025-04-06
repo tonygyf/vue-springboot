@@ -75,4 +75,30 @@ public class BlogController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    @PutMapping("/blogs/{id}")
+    public ResponseEntity<?> updateBlog(@PathVariable Integer id, @RequestBody Blog updatedBlog) {
+        try {
+            Blog blog = blogService.updateBlog(id, updatedBlog.getTitle(), updatedBlog.getContent());
+            if (blog == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(blog);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/blogs/{id}")
+    public ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
+        try {
+            boolean deleted = blogService.deleteBlog(id);
+            if (!deleted) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok("博客已删除");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

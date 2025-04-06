@@ -9,16 +9,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/list")
-    public ResponseEntity<List<User>> getAllUsers() {
+    // 修改点：新增 GET /api/users 映射
+    @GetMapping
+    public ResponseEntity<List<User>> getAllUsersAlias() {
         List<User> users = userService.findAllUsers();
         return ResponseEntity.ok(users);
     }
+
+    // 可选：保留旧路径 /list
+//    @GetMapping("/list")
+//    public ResponseEntity<List<User>> getAllUsers() {
+//        List<User> users = userService.findAllUsers();
+//        return ResponseEntity.ok(users);
+//    }
 
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {

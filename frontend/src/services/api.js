@@ -44,6 +44,14 @@ class BlogService {
   createComment(blogId, content) {
     return axios.post(API_URL + `blogs/${blogId}/comments`, { content });
   }
+  // services/api.js
+  updateBlog(blogId, data) {
+    return axios.put(`/api/blogs/${blogId}`, data);
+  }
+  deleteBlog(blogId) {
+    return axios.delete(`/api/blogs/${blogId}`);
+  }
+
 }
 
 export const authService = new AuthService();
