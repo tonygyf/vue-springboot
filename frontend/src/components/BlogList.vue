@@ -67,11 +67,14 @@ export default {
 .main-content {
   margin: 0 auto;
   width: 100%;
+  max-width: 900px;
+  padding: 0 20px;
 }
 
 .card {
   background-color: #fff;
   border-radius: 8px;
+  margin: 20px 0;
 }
 
 .blog-item {

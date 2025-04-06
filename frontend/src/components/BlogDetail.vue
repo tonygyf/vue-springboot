@@ -89,13 +89,21 @@ export default {
 </script>
 
 <style scoped>
+.card {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
 .blog-content {
   border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
+  padding: 1rem 0;
 }
+
 .comment-item {
   background-color: #f8f9fa;
   margin-bottom: 1rem;
   border-radius: 4px;
+  padding: 1rem;
 }
 </style>

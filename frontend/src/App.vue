@@ -68,9 +68,18 @@ export default {
 
 <style>
 .container {
-  max-width: 600px;
+  max-width: 90%;
+  width: 100%;
   position: relative;
   z-index: 1;
   margin: 0 auto;
+  padding: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .container {
+    max-width: 95%;
+    padding: 10px;
+  }
 }
 </style>

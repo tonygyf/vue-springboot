@@ -17,12 +17,24 @@ const routes = [
     { path: '/home', component: Home },
     { path: '/blogs', component: BlogList },
     { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') },
-    { path: '/blogs/create', component: CreateBlog }
+    { path: '/blogs/create', component: CreateBlog },
+    { path: '/user-management', component: () => import('./components/UserManagement.vue') }
 ]
 
 const router = createRouter({
     history: createWebHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    if (to.path === '/user-management') {
+        const user = JSON.parse(localStorage.getItem('user'))
+        if (!user || user.role !== 'admin') {
+            next('/home')
+            return
+        }
+    }
+    next()
 })
 
 const app = createApp(App)
