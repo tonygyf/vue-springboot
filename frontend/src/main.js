@@ -8,6 +8,7 @@ import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Home from './components/Home.vue'
 import BlogList from './components/BlogList.vue'
+import CreateBlog from './components/CreateBlog.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -15,7 +16,8 @@ const routes = [
     { path: '/register', component: Register },
     { path: '/home', component: Home },
     { path: '/blogs', component: BlogList },
-    { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') }
+    { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') },
+    { path: '/blogs/create', component: CreateBlog }
 ]
 
 const router = createRouter({

@@ -55,4 +55,15 @@ public class BlogService {
         
         return commentRepository.save(comment);
     }
+
+    public Blog createBlog(Integer userId, String title, String content) {
+
+
+        Blog blog = new Blog();
+        blog.setUserId(userId);
+        blog.setTitle(title);
+        blog.setContent(content);
+        
+        return blogRepository.save(blog);
+    }
 }

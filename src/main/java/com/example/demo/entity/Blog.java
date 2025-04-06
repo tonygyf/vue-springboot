@@ -12,9 +12,9 @@ public class Blog {
     @Column(name="blog_id")
     private Integer blogId;
 
-    @ManyToOne
+
     @JoinColumn(name = "user_id")
-    private User user;
+    private Integer userId;
 
     private String title;
 
@@ -34,13 +34,14 @@ public class Blog {
         this.blogId = blogId;
     }
 
-    public User getUser() {
-        return user;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
+
 
     public String getTitle() {
         return title;

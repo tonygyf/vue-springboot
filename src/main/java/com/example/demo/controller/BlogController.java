@@ -54,4 +54,25 @@ public class BlogController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/blogs/create")
+    public ResponseEntity<?> createBlog(@RequestBody Blog blog) {
+        try {
+            if (blog.getUserId() == null) {
+                return ResponseEntity.badRequest().body("用户ID不能为空");
+            }
+            
+            if (blog.getTitle() == null || blog.getTitle().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("标题不能为空");
+            }
+            if (blog.getContent() == null || blog.getContent().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("内容不能为空");
+            }
+
+            Blog savedBlog = blogService.createBlog(blog.getUserId(), blog.getTitle(), blog.getContent());
+            return ResponseEntity.ok(savedBlog);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

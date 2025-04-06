@@ -32,6 +32,15 @@ class BlogService {
     return axios.get(API_URL + `blogs/${blogId}`);
   }
 
+  createBlog(title, content) {
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    return axios.post(API_URL + 'blogs/create', {
+      userId: currentUser.userId,
+      title,
+      content
+    });
+  }
+
   createComment(blogId, content) {
     return axios.post(API_URL + `blogs/${blogId}/comments`, { content });
   }
