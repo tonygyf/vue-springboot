@@ -21,12 +21,14 @@ public class SecurityConfig {
                     new AntPathRequestMatcher("/api/auth/**"),
                     new AntPathRequestMatcher("/api/blogs/**"),
                     new AntPathRequestMatcher("/api/users/**"),
+                    new AntPathRequestMatcher("/api/ai/**"),
                     new AntPathRequestMatcher("/"),
                     new AntPathRequestMatcher("/avatars/**"),
                     new AntPathRequestMatcher("/css/**"),
                     new AntPathRequestMatcher("/js/**"),
                     new AntPathRequestMatcher("/images/**"),
-                    new AntPathRequestMatcher("/favicon.ico")
+                    new AntPathRequestMatcher("/favicon.ico"),
+                    new AntPathRequestMatcher("/api/chat")// 加上这一行
                 ).permitAll()
                 .anyRequest().authenticated()
             )

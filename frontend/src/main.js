@@ -11,6 +11,7 @@ import BlogList from './components/BlogList.vue'
 import CreateBlog from './components/CreateBlog.vue'
 import DeletedBlogList from './components/DeletedBlogList.vue'
 import MyBlogList from './components/MyBlogList.vue'
+import AiChat from './components/AiChat.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -22,6 +23,7 @@ const routes = [
     { path: '/blogs/create', component: CreateBlog },
     { path: '/my-blogs', component: MyBlogList },
     { path: '/user-management', component: () => import('./components/UserManagement.vue') },
+    { path: '/ai-chat', name: 'AiChat', component: AiChat, meta: { title: 'AI对话' } },
     { 
         path: '/deleted-blogs',
         name: 'DeletedBlogList',

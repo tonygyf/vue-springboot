@@ -18,6 +18,9 @@
           <button v-if="isAdmin" class="action-btn" @click="goToDeletedBlogs">
             <i class="fas fa-trash"></i> 已删除博客
           </button>
+          <button class="action-btn" @click="goToAiChat">
+            <i class="fas fa-robot"></i> AI对话
+          </button>
         </div>
       </div>
     </div>
@@ -41,6 +44,9 @@ export default {
     },
     goToDeletedBlogs() {
       this.$router.push('/deleted-blogs');
+    },
+    goToAiChat() {
+      this.$router.push('/ai-chat');
     }
   }
 }
