@@ -15,6 +15,9 @@
           <button v-if="isAdmin" class="action-btn" @click="goToUserManagement">
             <i class="fas fa-users"></i> 用户管理
           </button>
+          <button v-if="isAdmin" class="action-btn" @click="goToDeletedBlogs">
+            <i class="fas fa-trash"></i> 已删除博客
+          </button>
         </div>
       </div>
     </div>
@@ -35,6 +38,9 @@ export default {
   methods: {
     goToUserManagement() {
       this.$router.push('/user-management');
+    },
+    goToDeletedBlogs() {
+      this.$router.push('/deleted-blogs');
     }
   }
 }

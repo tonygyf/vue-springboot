@@ -9,6 +9,7 @@ import Register from './components/Register.vue'
 import Home from './components/Home.vue'
 import BlogList from './components/BlogList.vue'
 import CreateBlog from './components/CreateBlog.vue'
+import DeletedBlogList from './components/DeletedBlogList.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -18,7 +19,20 @@ const routes = [
     { path: '/blogs', component: BlogList },
     { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') },
     { path: '/blogs/create', component: CreateBlog },
-    { path: '/user-management', component: () => import('./components/UserManagement.vue') }
+    { path: '/user-management', component: () => import('./components/UserManagement.vue') },
+    { 
+        path: '/deleted-blogs',
+        name: 'DeletedBlogList',
+        component: DeletedBlogList,
+        beforeEnter: (to, from, next) => {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.role === 'admin') {
+                next();
+            } else {
+                next('/blogs');
+            }
+        }
+    }
 ]
 
 const router = createRouter({

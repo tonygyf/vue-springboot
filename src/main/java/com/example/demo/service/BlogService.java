@@ -28,7 +28,7 @@ public class BlogService {
     private UserRepository userRepository;
 
     public List<Blog> getAllBlogs() {
-        return blogRepository.findAllByOrderByCreatedAtDesc();
+        return blogRepository.findAllByIsDeletedFalseOrderByCreatedAtDesc();
     }
     
     public Blog getBlogById(Integer id) {
@@ -92,6 +92,10 @@ public class BlogService {
         }
         return blogRepository.findByTitleContainingOrContentContainingAndIsDeletedFalseOrderByCreatedAtDesc(
             query, query);
+    }
+
+    public List<Blog> getDeletedBlogs() {
+        return blogRepository.findAllByIsDeletedTrueOrderByCreatedAtDesc();
     }
 
 }

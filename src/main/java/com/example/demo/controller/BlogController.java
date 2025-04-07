@@ -94,6 +94,12 @@ public class BlogController {
         }
     }
 
+    @GetMapping("/blogs/deleted")
+    public ResponseEntity<?> getDeletedBlogs() {
+        List<Blog> blogs = blogService.getDeletedBlogs();
+        return ResponseEntity.ok(blogs);
+    }
+
     @DeleteMapping("/blogs/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable Integer id) {
         try {

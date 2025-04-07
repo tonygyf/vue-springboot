@@ -56,6 +56,21 @@ class BlogService {
     return axios.delete(`/api/blogs/${blogId}`);
   }
 
+  getDeletedBlogList() {
+    return axios.get(API_URL + 'blogs/deleted');
+  }
+
+  searchDeletedBlogs(query) {
+    return axios.get(API_URL + 'blogs/deleted/search', { params: { query } });
+  }
+
+  restoreBlog(blogId) {
+    return axios.post(API_URL + `blogs/${blogId}/restore`);
+  }
+
+  permanentDeleteBlog(blogId) {
+    return axios.delete(API_URL + `blogs/${blogId}/permanent`);
+  }
 }
 
 export const authService = new AuthService();
