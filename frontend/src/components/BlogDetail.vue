@@ -12,8 +12,8 @@
         <p class="mt-3">{{ blog.content }}</p>
         <div class="d-flex align-items-center text-muted">
           <small>发布于: {{ formatDate(blog.createdAt) }}</small>
-          <div class="ms-3">
-            <i class="el-icon-star-on"></i>
+          <div class="ms-3 like-button" @click="toggleLike">
+            <i :class="[isLiked ? 'el-icon-star-on active' : 'el-icon-star-off']"></i>
             <span>{{ likesCount }} 点赞</span>
           </div>
         </div>
@@ -43,6 +43,7 @@ export default {
       blog: null,
       comments: [],
       likesCount: 0,
+      isLiked: false,
       message: '',
       messageClass: '',
       newComment: ''
@@ -50,6 +51,7 @@ export default {
   },
   created() {
     this.fetchBlogDetails();
+    this.checkLikeStatus();
   },
   methods: {
     async fetchBlogDetails() {
@@ -71,6 +73,33 @@ export default {
       const date = new Date(dateString);
       return date.toLocaleDateString();
     },
+    async checkLikeStatus() {
+      try {
+        const blogId = this.$route.params.id;
+        const response = await blogService.getLikeStatus(blogId);
+        this.isLiked = response.data.liked;
+      } catch (error) {
+        console.error('获取点赞状态失败:', error);
+      }
+    },
+
+    async toggleLike() {
+      try {
+        const blogId = this.$route.params.id;
+        if (this.isLiked) {
+          await blogService.unlikeBlog(blogId);
+          this.likesCount--;
+        } else {
+          await blogService.likeBlog(blogId);
+          this.likesCount++;
+        }
+        this.isLiked = !this.isLiked;
+      } catch (error) {
+        this.message = error.response?.data?.message || '操作失败';
+        this.messageClass = 'alert-danger';
+      }
+    },
+
     async submitComment() {
       try {
         const blogId = this.$route.params.id;
@@ -105,5 +134,25 @@ export default {
   margin-bottom: 1rem;
   border-radius: 4px;
   padding: 1rem;
+}
+
+.like-button {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.like-button:hover {
+  color: #409eff;
+}
+
+.like-button i {
+  font-size: 18px;
+}
+
+.like-button i.active {
+  color: #409eff;
 }
 </style>

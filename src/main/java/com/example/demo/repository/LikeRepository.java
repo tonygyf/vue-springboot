@@ -13,4 +13,8 @@ public interface LikeRepository extends JpaRepository<Like, Integer> {
     long countByBlogId(Integer blogId);
     
     List<Like> findByBlogBlogId(Integer blogId);
+
+    boolean existsByBlogBlogIdAndUserUserId(Integer blogId, Integer userId);
+
+    Like findByBlogBlogIdAndUserUserId(Integer blogId, Integer userId);
 }

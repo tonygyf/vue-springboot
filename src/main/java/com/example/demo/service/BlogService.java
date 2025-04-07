@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.entity.Blog;
 import com.example.demo.entity.Comment;
+import com.example.demo.entity.Like;
 import com.example.demo.entity.User;
 import com.example.demo.repository.BlogRepository;
 import com.example.demo.repository.CommentRepository;
@@ -96,6 +97,29 @@ public class BlogService {
 
     public List<Blog> getDeletedBlogs() {
         return blogRepository.findAllByIsDeletedTrueOrderByCreatedAtDesc();
+    }
+
+    public boolean getLikeStatus(Integer blogId, Integer userId) {
+        return likeRepository.existsByBlogBlogIdAndUserUserId(blogId, userId);
+    }
+
+    public void likeBlog(Integer blogId, Integer userId) {
+        if (!getLikeStatus(blogId, userId)) {
+            Blog blog = getBlogById(blogId);
+            User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+            
+            Like like = new Like();
+            like.setBlog(blog);
+            like.setUser(user);
+            likeRepository.save(like);
+        }
+    }
+
+    public void unlikeBlog(Integer blogId, Integer userId) {
+        Like like = likeRepository.findByBlogBlogIdAndUserUserId(blogId, userId);
+        if (like != null) {
+            likeRepository.delete(like);
+        }
     }
 
 }

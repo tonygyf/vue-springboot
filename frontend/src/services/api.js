@@ -71,6 +71,18 @@ class BlogService {
   permanentDeleteBlog(blogId) {
     return axios.delete(API_URL + `blogs/${blogId}/permanent`);
   }
+
+  likeBlog(blogId) {
+    return axios.post(API_URL + `blogs/${blogId}/like`);
+  }
+
+  unlikeBlog(blogId) {
+    return axios.delete(API_URL + `blogs/${blogId}/like`);
+  }
+
+  getLikeStatus(blogId) {
+    return axios.get(API_URL + `blogs/${blogId}/like`);
+  }
 }
 
 export const authService = new AuthService();
