@@ -73,15 +73,24 @@ class BlogService {
   }
 
   likeBlog(blogId) {
-    return axios.post(API_URL + `blogs/${blogId}/like`);
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    return axios.post(API_URL + `blogs/${blogId}/like`, {
+      userId: currentUser.userId
+    });
   }
 
   unlikeBlog(blogId) {
-    return axios.delete(API_URL + `blogs/${blogId}/like`);
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    return axios.delete(API_URL + `blogs/${blogId}/like`, {
+      data: { userId: currentUser.userId }
+    });
   }
 
   getLikeStatus(blogId) {
-    return axios.get(API_URL + `blogs/${blogId}/like`);
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    return axios.get(API_URL + `blogs/${blogId}/like/status`, {
+      params: { userId: currentUser.userId }
+    });
   }
 }
 

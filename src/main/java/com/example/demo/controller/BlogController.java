@@ -101,10 +101,8 @@ public class BlogController {
     }
 
     @GetMapping("/blogs/{blogId}/like/status")
-    public ResponseEntity<?> getLikeStatus(@PathVariable Integer blogId) {
+    public ResponseEntity<?> getLikeStatus(@PathVariable Integer blogId, @RequestParam Integer userId) {
         try {
-            // 这里暂时硬编码userId为1，实际应该从认证信息中获取
-            Integer userId = 1;
             boolean liked = blogService.getLikeStatus(blogId, userId);
             Map<String, Object> response = new HashMap<>();
             response.put("liked", liked);
@@ -115,10 +113,9 @@ public class BlogController {
     }
 
     @PostMapping("/blogs/{blogId}/like")
-    public ResponseEntity<?> likeBlog(@PathVariable Integer blogId) {
+    public ResponseEntity<?> likeBlog(@PathVariable Integer blogId, @RequestBody Map<String, Integer> payload) {
         try {
-            // 这里暂时硬编码userId为1，实际应该从认证信息中获取
-            Integer userId = 1;
+            Integer userId = payload.get("userId");
             blogService.likeBlog(blogId, userId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
@@ -127,10 +124,9 @@ public class BlogController {
     }
 
     @DeleteMapping("/blogs/{blogId}/like")
-    public ResponseEntity<?> unlikeBlog(@PathVariable Integer blogId) {
+    public ResponseEntity<?> unlikeBlog(@PathVariable Integer blogId, @RequestBody Map<String, Integer> payload) {
         try {
-            // 这里暂时硬编码userId为1，实际应该从认证信息中获取
-            Integer userId = 1;
+            Integer userId = payload.get("userId");
             blogService.unlikeBlog(blogId, userId);
             return ResponseEntity.ok().build();
         } catch (Exception e) {
