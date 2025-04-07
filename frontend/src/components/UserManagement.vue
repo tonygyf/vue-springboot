@@ -1,6 +1,21 @@
 <template>
   <div class="user-management">
     <h2>用户管理</h2>
+    <div class="search-container">
+      <input
+        type="text"
+        v-model="searchQuery"
+        @input="handleSearch"
+        @keyup.enter="handleSearch"
+        class="search-input"
+        placeholder="搜索用户..."
+      />
+      <select v-model="searchRole" @change="handleSearch" class="role-select">
+        <option value="">所有角色</option>
+        <option value="admin">管理员</option>
+        <option value="user">用户</option>
+      </select>
+    </div>
     <div v-if="message" class="alert" :class="messageClass" role="alert">
       {{ message }}
     </div>
@@ -83,7 +98,9 @@ export default {
       message: '',
       messageClass: '',
       editDialogVisible: false,
-      editingUser: {}
+      editingUser: {},
+      searchQuery: '',
+      searchRole: ''
     };
   },
   created() {
@@ -92,12 +109,20 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const res = await axios.get('/api/users');
+        const res = await axios.get('/api/users', {
+          params: {
+            query: this.searchQuery,
+            role: this.searchRole
+          }
+        });
         this.users = res.data;
       } catch (error) {
         this.message = error.response?.data?.message || '获取用户列表失败';
         this.messageClass = 'alert-danger';
       }
+    },
+    handleSearch() {
+      this.fetchUsers();
     },
     openEditDialog(user) {
       this.editingUser = {...user};
@@ -286,5 +311,26 @@ th {
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid #ddd;
+}
+.search-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.role-select {
+  padding: 8px 12px;
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 120px;
 }
 </style>

@@ -8,5 +8,13 @@ import java.util.List;
 
 @Repository
 public interface BlogRepository extends JpaRepository<Blog, Integer> {
+
+    // 查询所有博客，按时间倒序
     List<Blog> findAllByOrderByCreatedAtDesc();
+
+    // 查询某个用户的博客，按时间倒序
+    List<Blog> findByUserIdOrderByCreatedAtDesc(Integer userId);
+    
+    // 根据标题或内容搜索博客，只返回未删除的博客
+    List<Blog> findByTitleContainingOrContentContainingAndIsDeletedFalseOrderByCreatedAtDesc(String title, String content);
 }

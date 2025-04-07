@@ -17,8 +17,10 @@ public class UserController {
 
     // 修改点：新增 GET /api/users 映射
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsersAlias() {
-        List<User> users = userService.findAllUsers();
+    public ResponseEntity<List<User>> getAllUsersAlias(
+            @RequestParam(required = false, defaultValue = "") String query,
+            @RequestParam(required = false, defaultValue = "") String role) {
+        List<User> users = userService.searchUsers(query, role);
         return ResponseEntity.ok(users);
     }
 
@@ -57,5 +59,11 @@ public class UserController {
             return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam(required = false) String query) {
+        List<User> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
     }
 }

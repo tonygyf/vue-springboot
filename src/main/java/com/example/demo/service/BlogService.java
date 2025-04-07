@@ -86,5 +86,12 @@ public class BlogService {
         return true;
     }
 
+    public List<Blog> searchBlogs(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return getAllBlogs();
+        }
+        return blogRepository.findByTitleContainingOrContentContainingAndIsDeletedFalseOrderByCreatedAtDesc(
+            query, query);
+    }
 
 }

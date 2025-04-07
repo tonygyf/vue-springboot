@@ -18,6 +18,12 @@ public class BlogController {
     @Autowired
     private BlogService blogService;
 
+    @GetMapping("/blogs/search")
+    public ResponseEntity<List<Blog>> searchBlogs(@RequestParam String query) {
+        List<Blog> blogs = blogService.searchBlogs(query);
+        return ResponseEntity.ok(blogs);
+    }
+
     @GetMapping("/blogs")
     public ResponseEntity<List<Blog>> getAllBlogs() {
         List<Blog> blogs = blogService.getAllBlogs();

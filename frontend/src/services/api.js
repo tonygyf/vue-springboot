@@ -48,6 +48,10 @@ class BlogService {
   updateBlog(blogId, data) {
     return axios.put(`/api/blogs/${blogId}`, data);
   }
+
+  searchBlogs(query) {
+    return axios.get(API_URL + 'blogs/search', { params: { query } });
+  }
   deleteBlog(blogId) {
     return axios.delete(`/api/blogs/${blogId}`);
   }

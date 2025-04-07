@@ -49,8 +49,19 @@ public class UserService {
     public User updateUser(User user) {
         return userRepository.save(user);
     }
+    
+    public List<User> searchUsers(String query, String role) {
+        return userRepository.findByUsernameContainingOrRoleContainingOrderByCreatedAtDesc(query, role);
+    }
 
     public void deleteUser(User user) {
         userRepository.delete(user);
+    }
+
+    public List<User> searchUsers(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return findAllUsers();
+        }
+        return userRepository.findByUsernameContainingOrRoleContainingOrderByCreatedAtDesc(query, query);
     }
 }

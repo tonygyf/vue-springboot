@@ -1,5 +1,15 @@
 <template>
   <div class="main-content">
+    <div class="search-container">
+      <input
+        type="text"
+        v-model="searchQuery"
+        @input="handleSearch"
+        @keyup.enter="handleSearch"
+        class="search-input"
+        placeholder="搜索博客..."
+      />
+    </div>
     <div class="card">
       <div class="card-header">
         <h3 class="text-center">博客列表</h3>
@@ -59,6 +69,8 @@ export default {
       isAdmin: false,
       editDialogVisible: false,
       editingBlog: {},
+      searchQuery: '',
+      searchTimeout: null,
     };
   },
   created() {
@@ -78,6 +90,26 @@ export default {
         this.message = error.response?.data?.message || '获取博客列表失败';
         this.messageClass = 'alert-danger';
       }
+    },
+
+    async handleSearch() {
+      if (this.searchTimeout) {
+        clearTimeout(this.searchTimeout);
+      }
+      
+      this.searchTimeout = setTimeout(async () => {
+        try {
+          if (!this.searchQuery.trim()) {
+            await this.fetchBlogs();
+            return;
+          }
+          const response = await blogService.searchBlogs(this.searchQuery);
+          this.blogs = response.data;
+        } catch (error) {
+          this.message = error.response?.data?.message || '搜索失败';
+          this.messageClass = 'alert-danger';
+        }
+      }, 300);
     },
     formatDate(dateString) {
       if (!dateString) return '';
@@ -129,6 +161,31 @@ export default {
   width: 100%;
   max-width: 900px;
   padding: 0 20px;
+}
+
+.search-container {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 600px;
+  height: 40px;
+  padding: 0 16px;
+  font-size: 16px;
+  border: 1px solid #e8e8e8;
+  border-radius: 20px;
+  background-color: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.search-input:focus {
+  outline: none;
+  background-color: #fff;
+  border-color: #409eff;
+  box-shadow: 0 0 0 2px rgba(64,158,255,.2);
 }
 
 .card {
