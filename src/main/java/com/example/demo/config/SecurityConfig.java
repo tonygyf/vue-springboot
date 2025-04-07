@@ -1,30 +1,37 @@
 package com.example.demo.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-            .authorizeRequests()
-            .antMatchers("/api/auth/**", "/api/blogs/**", "/api/users/**").permitAll()
-            // 这意味着所有以"/api/blogs/"开头的路径都将被允许访问，包括"/api/blogs/"本身。
-                .antMatchers(
-                        "/",               // 首页
-                        "/avatars/**",     // 用户头像
-                        "/css/**",         // 样式
-                        "/js/**",          // JS 脚本
-                        "/images/**",      // 图片
-                        "/favicon.ico"     // 图标
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    new AntPathRequestMatcher("/api/auth/**"),
+                    new AntPathRequestMatcher("/api/blogs/**"),
+                    new AntPathRequestMatcher("/api/users/**"),
+                    new AntPathRequestMatcher("/"),
+                    new AntPathRequestMatcher("/avatars/**"),
+                    new AntPathRequestMatcher("/css/**"),
+                    new AntPathRequestMatcher("/js/**"),
+                    new AntPathRequestMatcher("/images/**"),
+                    new AntPathRequestMatcher("/favicon.ico")
                 ).permitAll()
-            .anyRequest().authenticated();
-        
-        http.cors();
+                .anyRequest().authenticated()
+            )
+            .cors(Customizer.withDefaults());
+
+        return http.build();
     }
 }
