@@ -121,5 +121,32 @@ public class BlogService {
             likeRepository.delete(like);
         }
     }
+    public boolean deleteComment(Integer commentId, Integer userId) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) return false;
+
+        Comment comment = commentOpt.get();
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) return false;
+
+        User user = userOpt.get();
+        if (!"admin".equals(user.getRole())) {
+            return false; // 只有 admin 才能删除评论
+        }
+
+        commentRepository.delete(comment);
+        return true;
+    }
+//    删除评论
+    public boolean deleteCommentById(Integer commentId) {
+        Optional<Comment> comment = commentRepository.findById(commentId);
+        if (comment.isPresent()) {
+            commentRepository.deleteById(commentId);
+            return true;
+        }
+        return false;
+    }
+
+
 
 }

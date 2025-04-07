@@ -6,7 +6,7 @@
     <SidebarLeft
         v-if="!isLoginPage"
         @create-new="goToNew"
-        @view-drafts="goToDrafts"
+
         @view-my-blogs="goToMyBlogs"
         @view-blog-list="goToBlogList"
     />
@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     isLoginPage() {
-      return this.$route.path === '/login';
+      return this.$route.path === '/login'||this.$route.path === '/register';
     }
   },
   data() {
@@ -53,9 +53,7 @@ export default {
     goToNew() {
       this.$router.push('/blogs/create');
     },
-    goToDrafts() {
-      this.$router.push('/drafts');
-    },
+
     goToMyBlogs() {
       this.$router.push('/my-blogs');
     },

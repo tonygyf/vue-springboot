@@ -146,4 +146,18 @@ public class BlogController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+//    删除评论
+    @DeleteMapping("/blogs/comments/{commentId}")
+    public ResponseEntity<?> deleteComment(@PathVariable Integer commentId, @RequestParam Integer userId) {
+        try {
+            boolean deleted = blogService.deleteComment(commentId, userId);
+            if (!deleted) {
+                return ResponseEntity.status(403).body("权限不足或评论不存在");
+            }
+            return ResponseEntity.ok("评论已删除");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

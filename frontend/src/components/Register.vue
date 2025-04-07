@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card narrow-card">
     <div class="card-header">
       <h3 class="text-center">注册</h3>
     </div>
@@ -64,3 +64,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.narrow-card {
+  max-width: 400px; /* Adjust this value to your desired width */
+  margin: 0 auto; /* Center the card horizontally */
+}
+</style>

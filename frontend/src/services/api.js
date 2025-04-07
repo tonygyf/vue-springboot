@@ -92,6 +92,13 @@ class BlogService {
       params: { userId: currentUser.userId }
     });
   }
+  // 删除评论
+  deleteComment(commentId, userId) {
+    return axios.delete(API_URL + `blogs/comments/${commentId}`, {
+      params: { userId }
+    });
+  }
+
 }
 
 export const authService = new AuthService();

@@ -25,7 +25,17 @@
           <button @click="submitComment" class="btn btn-primary" :disabled="!newComment.trim()">发表评论</button>
         </div>
         <div v-for="comment in comments" :key="comment.commentId" class="comment-item p-3 border-bottom">
-          <p>{{ comment.content }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <p class="mb-1">{{ comment.content }}</p>
+            <!-- 只有 admin 角色的用户可以看到删除按钮 -->
+            <button
+                v-if="isAdmin"
+                class="btn btn-sm btn-danger"
+                @click="deleteComment(comment.commentId)"
+            >
+              删除
+            </button>
+          </div>
           <small class="text-muted">{{ formatDate(comment.createdAt) }}</small>
         </div>
       </div>
@@ -46,12 +56,19 @@ export default {
       isLiked: false,
       message: '',
       messageClass: '',
-      newComment: ''
+      newComment: '',
+      isAdmin: false  // 控制是否显示删除按钮
     };
   },
   created() {
     this.fetchBlogDetails();
     this.checkLikeStatus();
+
+    // 获取当前用户的角色
+    const currentUser = JSON.parse(localStorage.getItem('user'));
+    if (currentUser && currentUser.role === 'admin') {
+      this.isAdmin = true;  // 如果是 admin 用户，则显示删除评论按钮
+    }
   },
   methods: {
     async fetchBlogDetails() {
@@ -112,7 +129,28 @@ export default {
         this.message = error.response?.data?.message || '评论发表失败';
         this.messageClass = 'alert-danger';
       }
+    },
+
+    async deleteComment(commentId) {
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('user'));
+        await blogService.deleteComment(commentId, currentUser.userId);  // 调用删除评论 API
+        this.message = '评论已删除';
+        this.messageClass = 'alert-success';  // 设置为绿色提示信息
+
+        await this.fetchBlogDetails();  // 删除后刷新评论列表
+      } catch (error) {
+        this.message = error.response?.data?.message || '删除评论失败';
+        this.messageClass = 'alert-danger';  // 设置为红色提示信息
+
+        await this.fetchBlogDetails();  // 删除后刷新评论列表
+      }
     }
+
+
+
+
+
   }
 };
 </script>
