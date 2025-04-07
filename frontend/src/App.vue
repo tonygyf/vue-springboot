@@ -57,7 +57,7 @@ export default {
       this.$router.push('/drafts');
     },
     goToMyBlogs() {
-      this.$router.push('/myblogs');
+      this.$router.push('/my-blogs');
     },
     goToBlogList() {
       this.$router.push('/blogs');

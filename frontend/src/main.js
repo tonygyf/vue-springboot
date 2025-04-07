@@ -10,6 +10,7 @@ import Home from './components/Home.vue'
 import BlogList from './components/BlogList.vue'
 import CreateBlog from './components/CreateBlog.vue'
 import DeletedBlogList from './components/DeletedBlogList.vue'
+import MyBlogList from './components/MyBlogList.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -19,6 +20,7 @@ const routes = [
     { path: '/blogs', component: BlogList },
     { path: '/blogs/:id', component: () => import('./components/BlogDetail.vue') },
     { path: '/blogs/create', component: CreateBlog },
+    { path: '/my-blogs', component: MyBlogList },
     { path: '/user-management', component: () => import('./components/UserManagement.vue') },
     { 
         path: '/deleted-blogs',
