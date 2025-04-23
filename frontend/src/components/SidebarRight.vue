@@ -17,6 +17,21 @@
             <span class="stat-label">权限</span>
             <span class="stat-value">{{ user.role }}</span>
           </div>
+          <div class="stat-item clickable" @click="showFollowers">
+            <span class="stat-label">粉丝</span>
+            <span class="stat-value">{{ user.followersCount || 0 }}</span>
+          </div>
+          <div class="stat-item clickable" @click="showFollowing">
+            <span class="stat-label">关注</span>
+            <span class="stat-value">{{ user.followingCount || 0 }}</span>
+          </div>
+        </div>
+
+        <div class="follow-section">
+          <button class="follow-btn" @click="toggleFollow" v-if="!isCurrentUser">
+            <i :class="isFollowing ? 'fas fa-user-minus' : 'fas fa-user-plus'"></i>
+            {{ isFollowing ? '取消关注' : '关注' }}
+          </button>
         </div>
 
         <div class="edit-section">
@@ -60,6 +75,30 @@
         </div>
       </div>
     </FloatEditor>
+
+    <!-- 关注列表浮窗 -->
+    <FloatEditor :visible="followListVisible" @close="followListVisible = false">
+      <div class="follow-list-content">
+        <h3>{{ followType === 'followers' ? '粉丝列表' : '关注列表' }}</h3>
+        <div class="follow-list">
+          <div v-for="user in followList" :key="user.username" class="follow-item">
+            <div class="user-avatar-small">
+              <img :src="'http://localhost:8080' + user.avatarUrl" alt="头像" />
+            </div>
+            <span class="username">{{ user.username }}</span>
+            <button 
+              class="follow-btn" 
+              v-if="!isCurrentUser"
+              @click="toggleFollow(user)"
+              :class="{ 'following': user.isFollowing }"
+            >
+              <i :class="user.isFollowing ? 'fas fa-user-minus' : 'fas fa-user-plus'"></i>
+              {{ user.isFollowing ? '取消关注' : '关注' }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </FloatEditor>
   </div>
 </template>
 
@@ -76,55 +115,61 @@ export default {
         email: '',
         password: '',
         avatarUrl: '/avatars/admin.png',
-        role: 'user'
+        role: 'user',
+        followersCount: 0,
+        followingCount: 0
       },
       editDialogVisible: false,
-      editingUser: {}
+      followListVisible: false,
+      followType: '',
+      followList: [],
+      editingUser: {},
+      isFollowing: false
     };
   },
-  created() {
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      this.user = JSON.parse(savedUser);
+  computed: {
+    isCurrentUser() {
+      const currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+      return currentUser.username === this.user.username;
     }
   },
   methods: {
-    logout() {
-      localStorage.removeItem('user');
-      this.$router.push('/login');
+    showFollowers() {
+      this.$router.push(`/user/${this.user.username}/followers`);
     },
-    openEditDialog() {
-      this.editingUser = { ...this.user };
-      this.editDialogVisible = true;
+    showFollowing() {
+      this.$router.push(`/user/${this.user.username}/following`);
     },
-    closeEditDialog() {
-      this.editDialogVisible = false;
-    },
-    async submitEdit() {
+    async toggleFollow() {
       try {
-        const payload = {
-          username: this.editingUser.username,
-          password: this.editingUser.password,
-          email: this.editingUser.email,
-          avatarUrl: this.editingUser.avatarUrl
-        };
-
-        await axios.put(`/api/users/${this.editingUser.username}`, payload);
-
-        // 更新并保存用户信息
-        this.user = { ...this.user, ...payload };
-        localStorage.setItem('user', JSON.stringify(this.user));
-
-        // ✅ 再从 localStorage 同步一次，确保数据一致
-        const saved = localStorage.getItem('user');
-        if (saved) {
-          this.user = JSON.parse(saved);
+        if (this.isFollowing) {
+          await axios.delete(`/api/users/${this.user.username}/follow`);
+          this.user.followersCount--;
+        } else {
+          await axios.post(`/api/users/${this.user.username}/follow`);
+          this.user.followersCount++;
         }
-
-        this.editDialogVisible = false;
+        this.isFollowing = !this.isFollowing;
       } catch (error) {
-        alert(error.response?.data?.message || '更新失败');
+        alert(error.response?.data?.message || '操作失败');
       }
+    },
+    async checkFollowStatus() {
+      if (!this.isCurrentUser) {
+        try {
+          const response = await axios.get(`/api/users/${this.user.username}/follow/status`);
+          this.isFollowing = response.data.following;
+        } catch (error) {
+          console.error('获取关注状态失败:', error);
+        }
+      }
+    }
+  },
+  async created() {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      this.user = JSON.parse(savedUser);
+      await this.checkFollowStatus();
     }
   }
 };
@@ -223,6 +268,38 @@ export default {
   font-weight: bold;
 }
 
+.stat-item.clickable {
+  cursor: pointer;
+}
+
+.stat-item.clickable:hover {
+  background-color: rgba(64, 158, 255, 0.1);
+  border-radius: 4px;
+}
+
+.follow-section {
+  margin-top: 10px;
+}
+
+.follow-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #409eff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.follow-btn:hover {
+  background-color: #66b1ff;
+}
+
 .edit-section {
   margin-top: 10px;
 }
@@ -319,4 +396,62 @@ export default {
   object-fit: cover;
   border: 1px solid #ddd;
 }
+
+.follow-list-content {
+  max-width: 400px;
+  width: 100%;
+}
+
+.follow-list {
+  margin-top: 20px;
+}
+
+.follow-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #ebeef5;
+}
+
+.follow-item:last-child {
+  border-bottom: none;
+}
+
+.follow-item .username {
+  font-size: 1em;
+  color: #303133;
+  flex-grow: 1;
+}
+
+.follow-item:hover {
+  background-color: rgba(64, 158, 255, 0.1);
+}
+
+.follow-item .follow-btn {
+  padding: 5px 10px;
+  font-size: 0.8em;
+  background-color: #409eff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.follow-item .follow-btn:hover {
+  background-color: #66b1ff;
+}
+
+.follow-item .follow-btn.following {
+  background-color: #f56c6c;
+}
+
+.follow-item .follow-btn.following:hover {
+  background-color: #f78989;
+}
+
 </style>

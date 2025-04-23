@@ -12,6 +12,7 @@ import CreateBlog from './components/CreateBlog.vue'
 import DeletedBlogList from './components/DeletedBlogList.vue'
 import MyBlogList from './components/MyBlogList.vue'
 import AiChat from './components/AiChat.vue'
+import FollowingWheelView from './views/FollowingWheelView.vue'
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -24,6 +25,7 @@ const routes = [
     { path: '/my-blogs', component: MyBlogList },
     { path: '/user-management', component: () => import('./components/UserManagement.vue') },
     { path: '/ai-chat', name: 'AiChat', component: AiChat, meta: { title: 'AI对话' } },
+    { path: '/following-wheel', name: 'FollowingWheel', component: FollowingWheelView, meta: { title: '关注圆盘' } },
     { 
         path: '/deleted-blogs',
         name: 'DeletedBlogList',
@@ -36,6 +38,24 @@ const routes = [
                 next('/blogs');
             }
         }
+    },
+    {
+        path: '/user/:username/followers',
+        name: 'UserFollowers',
+        component: () => import('./views/UserFollowList.vue'),
+        props: route => ({ 
+            username: route.params.username,
+            type: 'followers'
+        })
+    },
+    {
+        path: '/user/:username/following',
+        name: 'UserFollowing',
+        component: () => import('./views/UserFollowList.vue'),
+        props: route => ({ 
+            username: route.params.username,
+            type: 'following'
+        })
     }
 ]
 

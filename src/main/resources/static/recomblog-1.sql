@@ -18,6 +18,22 @@ SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
 -- ----------------------------
+-- Table structure for follows
+-- ----------------------------
+DROP TABLE IF EXISTS `follows`;
+CREATE TABLE `follows`  (
+  `follow_id` int NOT NULL AUTO_INCREMENT,
+  `follower_id` int NOT NULL,
+  `following_id` int NOT NULL,
+  `created_at` datetime NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`follow_id`) USING BTREE,
+  INDEX `follower_id`(`follower_id` ASC) USING BTREE,
+  INDEX `following_id`(`following_id` ASC) USING BTREE,
+  CONSTRAINT `follows_ibfk_1` FOREIGN KEY (`follower_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  CONSTRAINT `follows_ibfk_2` FOREIGN KEY (`following_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for blogs
 -- ----------------------------
 DROP TABLE IF EXISTS `blogs`;

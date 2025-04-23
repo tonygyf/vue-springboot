@@ -21,6 +21,9 @@
           <button class="action-btn" @click="goToAiChat">
             <i class="fas fa-robot"></i> AI对话
           </button>
+          <button class="action-btn" @click="goToFollowingWheel">
+            <i class="fas fa-circle-notch"></i> 关注圆盘
+          </button>
         </div>
       </div>
     </div>
@@ -44,6 +47,9 @@ export default {
     },
     goToDeletedBlogs() {
       this.$router.push('/deleted-blogs');
+    },
+    goToFollowingWheel() {
+      this.$router.push('/following-wheel');
     },
     goToAiChat() {
       this.$router.push('/ai-chat');
